@@ -115,7 +115,7 @@
 
         .post-actions {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start; /* Align buttons to the left */
         }
 
         .edit-button, .view-more-button {
@@ -126,10 +126,10 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-left: 5px;
+            margin-right: 5px; /* Space between buttons */
         }
 
-        .edit-button:hover {
+        .edit-button:hover, .view-more-button:hover {
             background-color: #1d68a7;
         }
 
@@ -145,14 +145,6 @@
 
         .delete-button:hover {
             background-color: #cc1f24;
-        }
-
-        .view-more-button {
-            background-color: #38c172;
-        }
-
-        .view-more-button:hover {
-            background-color: #2f9e63;
         }
 
         .post-image {
@@ -207,8 +199,12 @@
                 <div class="no-image">No image available</div>
             @endif
             <div class="post-actions">
-                <a href="{{ route('posts.show', $post->id) }}" class="view-more-button">View More</a>
-                <a href="{{ route('posts.edit', $post->id) }}" class="edit-button">Edit</a>
+                <form action="{{ route('posts.show', $post->id) }}" method="GET" style="display:inline;">
+                    <button type="submit" class="view-more-button">View More</button>
+                </form>
+                <form action="{{ route('posts.edit', $post->id) }}" method="GET" style="display:inline;">
+                    <button type="submit" class="edit-button">Edit</button>
+                </form>
                 <form action="{{ route('posts.destroy', $post->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
