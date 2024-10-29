@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;    
+use App\Models\Image; // Make sure to import the Image model if you have it.
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -122,14 +123,14 @@ class PostController extends Controller
      * Display the user dashboard with only the user's posts.
      */
     public function dashboard()
-{
-    if (!Auth::check()) {
-        return redirect()->route('login')->with('error', 'Please log in to access the dashboard.');
-    }
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in to access the dashboard.');
+        }
 
-    $posts = Post::where('user_id', Auth::id())->with('images')->get();
-    return view('dashboard', compact('posts'));
-}
+        $posts = Post::where('user_id', Auth::id())->with('images')->get();
+        return view('dashboard', compact('posts'));
+    }
 
     /**
      * Display a single post on the home page.
@@ -138,5 +139,22 @@ class PostController extends Controller
     {
         $post = Post::with('images')->findOrFail($id);
         return view('shows', compact('post'));
+    }
+
+    /**
+     * Remove the specified image from storage.
+     */
+    public function removeImage($postId, $imageId)
+    {
+    $post = Post::findOrFail($postId);
+    $image = $post->images()->findOrFail($imageId); // Ensure it's related to the correct post
+
+    // Delete the image file from storage
+    Storage::disk('public')->delete('images/' . $image->filename);
+
+    // Delete the image record from the database
+    $image->delete();
+
+    return response()->json(['success' => true]);
     }
 }

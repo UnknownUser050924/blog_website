@@ -29,6 +29,8 @@ Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
 Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
 Route::put('/posts/{id}', [PostController::class, 'update'])->name('posts.update');
 Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
+Route::resource('posts', PostController::class);
+Route::delete('/posts/{post}/images/{image}', [PostController::class, 'removeImage'])->name('posts.images.destroy');
 
 Route::get('password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
