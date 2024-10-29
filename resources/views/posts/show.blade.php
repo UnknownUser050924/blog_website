@@ -56,14 +56,14 @@
     </style>
 </head>
 <body>
-    <h1>{{ $post->title }}</h1>
     <div class="post-container">
+        <h1>{{ $post->title }}</h1>
         <p><strong>Posted by:</strong> {{ $post->users ? $post->users->name : 'Unknown Author' }}</p>
-        <p><strong>Content:</strong></p>
-        <p>{{ $post->content }}</p>
+        <p><strong>Content:</strong> {{ $post->content }}</p> <!-- Updated content format -->
         
         <!-- Display associated images -->
         @if($post->images->isNotEmpty())
+            <p><strong>Pictures:</strong></p>
             @foreach($post->images as $image)
                 <img src="{{ asset('storage/images/' . $image->filename) }}" alt="Post Image" class="post-image">
             @endforeach
@@ -75,3 +75,4 @@
     </div>
 </body>
 </html>
+    

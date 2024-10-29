@@ -53,6 +53,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
             width: 100%;
+            margin-bottom: 10px;
         }
 
         button:hover {
@@ -70,11 +71,52 @@
             margin-top: 10px;
         }
 
+        #imagePreview .image-container {
+            position: relative;
+            margin: 5px;
+        }
+
         #imagePreview img {
             width: 100px;
             height: 100px;
-            margin: 5px;
             border-radius: 5px;
+        }
+
+        .trash-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid #e3342f;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e3342f;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .trash-icon:hover {
+            background-color: #e3342f;
+            color: white;
+        }
+
+        .char-count {
+            margin: -10px 0 15px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .back-button {
+            background-color: #e3342f; /* Red color for back button */
+        }
+
+        .back-button:hover {
+            background-color: #cc1f24;
         }
     </style>
 </head>
@@ -99,19 +141,21 @@
 
         <label for="content">Content</label>
         <textarea name="content" id="content" rows="5" required oninput="updateCharCount()"></textarea>
-        <p id="charCount">Characters left: 500</p>
+        <p id="charCount" class="char-count">Characters left: 500</p> <!-- Moved closer to content -->
 
         <label for="images">Upload Images (max: 5 images, jpg, png)</label>
         <input type="file" name="images[]" id="images" multiple accept="image/jpeg, image/png" required onchange="previewImages()">
         <div id="imagePreview"></div>
 
         <button type="submit">Create Post</button>
+        <button type="button" class="back-button" onclick="window.location.href='{{ route('dashboard') }}'">Back to Dashboard</button>
     </form>
-
-    <p><a href="{{ route('dashboard') }}">Back to Dashboard</a></p>
 
     <script>
         const maxChars = 500;
+        const maxFiles = 5;
+        const selectedFiles = []; // Array to keep track of selected files
+
         function updateCharCount() {
             const content = document.getElementById('content').value;
             const charCount = document.getElementById('charCount');
@@ -123,18 +167,51 @@
             preview.innerHTML = ''; // Clear previous images
             const files = document.getElementById('images').files;
 
+            // Clear selected files array and add new files
+            selectedFiles.length = 0; 
             for (let i = 0; i < files.length; i++) {
-                const file = files[i];
+                selectedFiles.push(files[i]);
+            }
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.classList.add('image-container');
+                        
                         const img = document.createElement('img');
                         img.src = e.target.result;
-                        preview.appendChild(img);
+
+                        const trashIcon = document.createElement('div');
+                        trashIcon.classList.add('trash-icon');
+                        trashIcon.innerHTML = '&times;'; // Trash icon symbol
+                        trashIcon.onclick = function() {
+                            removeImage(i); // Remove image function
+                        };
+
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(trashIcon);
+                        preview.appendChild(imgContainer);
                     };
                     reader.readAsDataURL(file);
                 }
             }
+        }
+
+        function removeImage(index) {
+            selectedFiles.splice(index, 1); // Remove the file from the array
+            document.getElementById('images').files = createFileList(selectedFiles); // Update the file input
+            previewImages(); // Refresh the image preview
+        }
+
+        function createFileList(files) {
+            const dataTransfer = new DataTransfer();
+            files.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            return dataTransfer.files;
         }
     </script>
 </body>
