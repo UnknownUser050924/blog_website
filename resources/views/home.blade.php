@@ -90,7 +90,6 @@
             @else
                 <div class="no-image">No image available</div>
             @endif
-            <a href="{{ route('shows', $post->id) }}" class="view-more">View More</a> <!-- Positioned below the image -->
         </div>
     @endforeach
 </body>
