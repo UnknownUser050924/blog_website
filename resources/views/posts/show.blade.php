@@ -58,7 +58,6 @@
 <body>
     <div class="post-container">
         <h1>{{ $post->title }}</h1>
-        <p><strong>Posted by:</strong> {{ $post->users ? $post->users->name : 'Unknown Author' }}</p>
         <p><strong>Content:</strong> {{ $post->content }}</p> <!-- Updated content format -->
         
         <!-- Display associated images -->
@@ -75,4 +74,3 @@
     </div>
 </body>
 </html>
-    

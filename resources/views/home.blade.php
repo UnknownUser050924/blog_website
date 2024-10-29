@@ -35,6 +35,8 @@
             height: auto;
             border-radius: 5px;
             margin-top: 10px;
+            margin-right: 10px; /* Space between images */
+            display: inline-block; /* Align images horizontally */
         }
 
         .view-more {
@@ -82,15 +84,22 @@
 
     <!-- Display posts -->
     @foreach ($posts as $post)
-        <div class="post-container">
-            <h3>{{ $post->title }}</h3>
-            <p>{{ $post->content }}</p>
-            @if($post->images->isNotEmpty())
-                <img src="{{ asset('storage/images/' . $post->images->first()->filename) }}" alt="Post Image" class="post-image">
-            @else
-                <div class="no-image">No image available</div>
-            @endif
-        </div>
+    <div class="post-container">
+        <h3>{{ $post->title }}</h3>
+        <p>Description: {{ $post->content }}</p>
+        <p>Posted By: {{ $post->user ? $post->user->name : 'Unknown' }}</p>
+        <p>Published on: {{ $post->created_at->format('F j, Y') }}</p> <!-- Format date as needed -->
+
+        <!-- Display all associated images -->
+        @if($post->images->isNotEmpty())
+            <p>Pictures:</p>
+            @foreach($post->images as $image)
+                <img src="{{ asset('storage/images/' . $image->filename) }}" alt="Post Image" class="post-image">
+            @endforeach
+        @else
+            <div class="no-image">No images available</div>
+        @endif
+    </div>
     @endforeach
 </body>
 </html>
