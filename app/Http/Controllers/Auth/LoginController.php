@@ -28,6 +28,14 @@ class LoginController extends Controller
 
         // Attempt to log in with the provided credentials
         if (Auth::attempt($credentials, $request->remember)) {
+            // Set cookies for the email if "Remember Me" is checked
+            if ($request->remember) {
+                cookie()->queue(cookie('email', $request->email, 525600)); // 1 year
+            } else {
+                // If not remembered, forget the cookies
+                cookie()->queue(cookie('email', null, -1));
+            }
+            
             // Redirect to intended page, or '/dashboard' if none
             return redirect()->intended('/dashboard'); // Ensure '/dashboard' is a valid route
         }
@@ -42,6 +50,8 @@ class LoginController extends Controller
     public function logout()
     {
         Auth::logout(); // Log the user out
+        // Clear the email cookie on logout
+        cookie()->queue(cookie('email', null, -1)); // Clear the email cookie
         return redirect('/login'); // Redirect to login page
     }
 }

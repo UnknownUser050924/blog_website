@@ -32,6 +32,15 @@
             margin-bottom: 20px;
         }
 
+        .status-message {
+            display: none; /* Hidden by default */
+            background-color: #28a745; /* Green background */
+            color: white; /* White text */
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px; /* Space below the message */
+        }
+
         label {
             display: block;
             margin-bottom: 10px;
@@ -96,8 +105,9 @@
 </head>
 <body>
     <div class="reset-container">
+        <div class="status-message" id="statusMessage">Password reset link sent to your email!</div> <!-- Status message -->
         <h1>Reset Password</h1>
-        <form method="POST" action="{{ route('password.email') }}">
+        <form method="POST" action="{{ route('password.email') }}" onsubmit="showStatusMessage(event)">
             @csrf
             <label for="email">Email Address:</label>
             <input type="email" name="email" id="email" placeholder="Enter your email" required>
@@ -109,5 +119,26 @@
         </form>
         <p class="info-text">Please enter your registered email address to receive the password reset link.</p>
     </div>
+
+    <script>
+        function showStatusMessage(event) {
+            // Prevent the default form submission for demonstration purposes
+            event.preventDefault();
+
+            // Show the status message
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.style.display = 'block';
+
+            // Hide the status message after 3 seconds
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+
+            // Simulate form submission (remove this line in production)
+            setTimeout(() => {
+                event.target.submit();
+            }, 3000);
+        }
+    </script>
 </body>
 </html>

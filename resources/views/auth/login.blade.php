@@ -116,14 +116,14 @@
             @csrf
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" name="email" placeholder="Enter your email" required>
+                <input type="email" name="email" placeholder="Enter your email" value="{{ old('email', request()->cookie('email')) }}" required>            
             </div>
             <div class="form-group">
                 <label>Password:</label>
-                <input type="password" name="password" placeholder="Enter your password" required>
+                <input type="password" name="password" placeholder="Enter your password" value="{{ old('password', isset($_COOKIE['password']) ? $_COOKIE['password'] : '') }}" required>
             </div>
             <div class="remember-me">
-                <input type="checkbox" name="remember" id="remember">
+                <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                 <label for="remember">Remember Me</label>
             </div>
             <button type="submit">Login</button>
